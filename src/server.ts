@@ -286,6 +286,12 @@ export class MetabaseServer {
                   minimum: 1,
                   maximum: 100,
                 },
+                optimization_level: {
+                  type: 'string',
+                  enum: ['standard', 'aggressive', 'minimal'],
+                  description:
+                    'Controls how much data is returned. "standard" returns full detail, "aggressive" strips timestamps and reduces collection info, "minimal" returns only the bare essentials (id, name, and critical query fields). Defaults to auto-selection based on number of IDs requested.',
+                },
               },
               required: ['model', 'ids'],
             },

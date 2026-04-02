@@ -208,6 +208,20 @@ export function optimizeDashboardResponse(
     optimized.description = dashboard.description;
   }
 
+  // ULTRA_MINIMAL: only id, name, retrieved_at, and a flat list of card IDs + card names
+  if (optimizationLevel === OptimizationLevel.ULTRA_MINIMAL) {
+    if (dashboard.dashcards && Array.isArray(dashboard.dashcards)) {
+      optimized.dashcards = dashboard.dashcards
+        .filter((dc: any) => dc.card_id !== null && dc.card_id !== undefined)
+        .map((dc: any) => ({
+          id: dc.id,
+          card_id: dc.card_id,
+          card_name: dc.card?.name ?? null,
+        }));
+    }
+    return optimized;
+  }
+
   if (dashboard.collection_id !== null && dashboard.collection_id !== undefined) {
     optimized.collection_id = dashboard.collection_id;
   }
@@ -231,7 +245,7 @@ export function optimizeDashboardResponse(
     }
   }
 
-  // Essential dashboard cards with optimized card data
+  // Dashboard cards
   if (dashboard.dashcards && Array.isArray(dashboard.dashcards) && dashboard.dashcards.length > 0) {
     optimized.dashcards = dashboard.dashcards.map((dashcard: any) => {
       const optimizedDashcard: any = {
@@ -244,8 +258,9 @@ export function optimizeDashboardResponse(
         size_y: dashcard.size_y,
       };
 
-      // Essential parameter mappings for dashboard filtering
+      // Parameter mappings - omit in aggressive mode to save tokens
       if (
+        optimizationLevel === OptimizationLevel.STANDARD &&
         dashcard.parameter_mappings &&
         Array.isArray(dashcard.parameter_mappings) &&
         dashcard.parameter_mappings.length > 0
@@ -257,15 +272,16 @@ export function optimizeDashboardResponse(
         }));
       }
 
-      // Essential visualization settings
+      // Visualization settings - omit in aggressive mode
       if (
+        optimizationLevel === OptimizationLevel.STANDARD &&
         dashcard.visualization_settings &&
         Object.keys(dashcard.visualization_settings).length > 0
       ) {
         optimizedDashcard.visualization_settings = dashcard.visualization_settings;
       }
 
-      // Optimized card data (removing huge result_metadata)
+      // Card data
       if (dashcard.card) {
         optimizedDashcard.card = {
           id: dashcard.card.id,
@@ -273,7 +289,6 @@ export function optimizeDashboardResponse(
           database_id: dashcard.card.database_id,
         };
 
-        // Add optional card fields only if they exist
         if (dashcard.card.description) {
           optimizedDashcard.card.description = dashcard.card.description;
         }
@@ -286,8 +301,8 @@ export function optimizeDashboardResponse(
           optimizedDashcard.card.display = dashcard.card.display;
         }
 
-        // Essential for execute_query operations
-        if (dashcard.card.dataset_query) {
+        // dataset_query - include in standard only; aggressive just keeps card id/name/database_id
+        if (optimizationLevel === OptimizationLevel.STANDARD && dashcard.card.dataset_query) {
           const nativeQuery = extractNativeQuery(dashcard.card.dataset_query);
           optimizedDashcard.card.dataset_query = {
             type: dashcard.card.dataset_query.type,
@@ -296,8 +311,9 @@ export function optimizeDashboardResponse(
           };
         }
 
-        // Essential parameters for query execution
+        // Parameters - standard only
         if (
+          optimizationLevel === OptimizationLevel.STANDARD &&
           dashcard.card.parameters &&
           Array.isArray(dashcard.card.parameters) &&
           dashcard.card.parameters.length > 0
@@ -311,7 +327,6 @@ export function optimizeDashboardResponse(
               target: param.target,
             };
 
-            // Include values source information for parameters with static lists
             if (param.values_source_type) {
               optimizedParam.values_source_type = param.values_source_type;
             }
@@ -329,8 +344,9 @@ export function optimizeDashboardResponse(
     });
   }
 
-  // Essential dashboard-level parameters
+  // Dashboard-level parameters - standard only
   if (
+    optimizationLevel === OptimizationLevel.STANDARD &&
     dashboard.parameters &&
     Array.isArray(dashboard.parameters) &&
     dashboard.parameters.length > 0
@@ -344,7 +360,6 @@ export function optimizeDashboardResponse(
         sectionId: param.sectionId,
       };
 
-      // Include values source information for parameters with static lists
       if (param.values_source_type) {
         optimizedParam.values_source_type = param.values_source_type;
       }
@@ -357,24 +372,25 @@ export function optimizeDashboardResponse(
     });
   }
 
-  // Dashboard tabs (if any)
-  if (dashboard.tabs && Array.isArray(dashboard.tabs) && dashboard.tabs.length > 0) {
-    optimized.tabs = dashboard.tabs;
+  // Tabs and layout - standard only
+  if (optimizationLevel === OptimizationLevel.STANDARD) {
+    if (dashboard.tabs && Array.isArray(dashboard.tabs) && dashboard.tabs.length > 0) {
+      optimized.tabs = dashboard.tabs;
+    }
+
+    if (dashboard.width) {
+      optimized.width = dashboard.width;
+    }
+
+    if (dashboard.auto_apply_filters !== undefined) {
+      optimized.auto_apply_filters = dashboard.auto_apply_filters;
+    }
   }
 
-  // Layout settings
-  if (dashboard.width) {
-    optimized.width = dashboard.width;
-  }
-
-  if (dashboard.auto_apply_filters !== undefined) {
-    optimized.auto_apply_filters = dashboard.auto_apply_filters;
-  }
-
-  // Creator info - optimize based on level
+  // Creator info - standard only
   if (
-    (dashboard.creator || dashboard['last-edit-info']) &&
-    optimizationLevel !== OptimizationLevel.ULTRA_MINIMAL
+    optimizationLevel === OptimizationLevel.STANDARD &&
+    (dashboard.creator || dashboard['last-edit-info'])
   ) {
     const creator = dashboard.creator || dashboard['last-edit-info'];
     optimized.creator = {
@@ -385,8 +401,8 @@ export function optimizeDashboardResponse(
     };
   }
 
-  // Collection info - optimize based on level
-  if (dashboard.collection && optimizationLevel !== OptimizationLevel.ULTRA_MINIMAL) {
+  // Collection info
+  if (dashboard.collection) {
     if (optimizationLevel === OptimizationLevel.STANDARD) {
       optimized.collection = {
         id: dashboard.collection.id,
@@ -394,7 +410,7 @@ export function optimizeDashboardResponse(
         location: dashboard.collection.location,
       };
     } else {
-      // Aggressive level - just ID and name
+      // Aggressive - just ID and name
       optimized.collection = {
         id: dashboard.collection.id,
         name: dashboard.collection.name,

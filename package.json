@@ -1,11 +1,10 @@
 {
-  "name": "@jerichosequitin/metabase-mcp",
+  "name": "@groccaim/metabase-mcp",
   "version": "1.1.5",
   "description": "A high-performance MCP server for Metabase analytics integration with response optimization and robust error handling",
   "type": "module",
   "author": {
-    "name": "Jericho Sequitin",
-    "url": "https://github.com/jerichosequitin"
+    "name": "grocca"
   },
   "bin": {
     "metabase-mcp": "./build/src/index.js"
@@ -69,11 +68,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jerichosequitin/metabase-mcp.git"
+    "url": "git+https://github.com/groccaIM/metabase-mcp.git"
   },
-  "homepage": "https://github.com/jerichosequitin/metabase-mcp#readme",
+  "homepage": "https://github.com/groccaIM/metabase-mcp#readme",
   "bugs": {
-    "url": "https://github.com/jerichosequitin/metabase-mcp/issues"
+    "url": "https://github.com/groccaIM/metabase-mcp/issues"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "license": "MIT",
   "engines": {
