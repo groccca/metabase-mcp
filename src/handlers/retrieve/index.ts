@@ -4,7 +4,6 @@ import { ErrorCode, McpError } from '../../types/core.js';
 import { ValidationErrorFactory } from '../../utils/errorFactory.js';
 import {
   handleApiError,
-  saveRawStructure,
   validatePositiveInteger,
   validateEnumValue,
   parseAndValidatePositiveInteger,
@@ -15,7 +14,6 @@ import {
   MAX_IDS_PER_REQUEST,
   MAX_DATABASE_IDS_PER_REQUEST,
   CONCURRENCY_LIMITS,
-  SAVE_RAW_STRUCTURES,
   OPTIMIZATION_THRESHOLDS,
 } from './types.js';
 import {
@@ -228,9 +226,6 @@ export async function handleRetrieve(
         } else {
           apiHits++;
         }
-
-        // Save raw structure for documentation if enabled
-        saveRawStructure(validatedModel, response.data, SAVE_RAW_STRUCTURES);
 
         let result: any;
 

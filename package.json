@@ -1,5 +1,5 @@
 {
-  "name": "@groccaim/metabase-mcp",
+  "name": "groccamb-mcp",
   "version": "1.1.5",
   "description": "A high-performance MCP server for Metabase analytics integration with response optimization and robust error handling",
   "type": "module",
@@ -39,9 +39,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.23.0",
-    "@types/xlsx": "^0.0.35",
     "dotenv": "^16.3.1",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zod": "^3.25.0"
   },
   "devDependencies": {
@@ -75,7 +73,8 @@
     "url": "https://github.com/groccaIM/metabase-mcp/issues"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "license": "MIT",
   "engines": {

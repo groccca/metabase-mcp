@@ -11,9 +11,6 @@ export * from './parameterValidation.js';
 // Error handling
 export * from './errorHandling.js';
 
-// File utilities
-export * from './fileUtils.js';
-
 // Request utilities
 export * from './requestUtils.js';
 

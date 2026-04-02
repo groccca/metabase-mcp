@@ -28,6 +28,12 @@ export const mockApiClient = {
   getDatabasesList: vi.fn(),
   getCollectionsList: vi.fn(),
 
+  // Write methods
+  createCard: vi.fn(),
+  updateCard: vi.fn(),
+  createDashboard: vi.fn(),
+  updateDashboard: vi.fn(),
+
   // Generic request method
   request: vi.fn(),
 

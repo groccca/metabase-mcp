@@ -21,4 +21,3 @@ export const OPTIMIZATION_THRESHOLDS = {
 };
 
 // Flag to enable saving raw response structures for documentation
-export const SAVE_RAW_STRUCTURES = false; // Set to true when you want to capture raw structures

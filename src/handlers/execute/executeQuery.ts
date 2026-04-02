@@ -12,7 +12,7 @@ import { ErrorCode, McpError } from '../../types/core.js';
 
 /**
  * Validates if a SQL query is read-only (SELECT-only).
- * Used when METABASE_READ_ONLY_MODE is enabled.
+ * Used when SQL_READ_ONLY_MODE is enabled.
  */
 export function isReadOnlyQuery(sql: string): boolean {
   // Normalize the query: trim whitespace and remove leading comments
@@ -62,14 +62,14 @@ export async function executeSqlQuery(
   validatePositiveInteger(rowLimit, 'row_limit', requestId, logWarn);
 
   // Check read-only mode restriction
-  if (config.METABASE_READ_ONLY_MODE && !isReadOnlyQuery(query)) {
+  if (config.SQL_READ_ONLY_MODE && !isReadOnlyQuery(query)) {
     logWarn('Write operation blocked by read-only mode', {
       requestId,
       query: query.substring(0, 100),
     });
     throw new McpError(
       ErrorCode.InvalidRequest,
-      'Read-only mode is enabled. Only SELECT queries are permitted. Write operations (INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, TRUNCATE, etc.) are blocked. To execute write queries, disable read-only mode by setting METABASE_READ_ONLY_MODE=false.'
+      'Read-only mode is enabled. Only SELECT queries are permitted. Write operations (INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, TRUNCATE, etc.) are blocked. To execute write queries, disable read-only mode by setting SQL_READ_ONLY_MODE=false.'
     );
   }
 

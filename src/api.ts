@@ -1022,4 +1022,94 @@ export class MetabaseApiClient {
       throw error;
     }
   }
+
+  /**
+   * Create a new card (question/query) in Metabase
+   */
+  async createCard(payload: Record<string, unknown>): Promise<any> {
+    this.logDebug('Creating new card in Metabase');
+    const startTime = Date.now();
+    try {
+      const card = await this.request<any>('/api/card', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      this.logInfo(
+        `Successfully created card "${card.name}" (id: ${card.id}) in ${Date.now() - startTime}ms`
+      );
+      // Invalidate list cache
+      this.listCardsCache = null;
+      return card;
+    } catch (error) {
+      this.logError('Failed to create card in Metabase API', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update an existing card in Metabase
+   */
+  async updateCard(cardId: number, payload: Record<string, unknown>): Promise<any> {
+    this.logDebug(`Updating card ${cardId} in Metabase`);
+    const startTime = Date.now();
+    try {
+      const card = await this.request<any>(`/api/card/${cardId}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+      this.logInfo(`Successfully updated card ${cardId} in ${Date.now() - startTime}ms`);
+      // Invalidate caches
+      this.cardCache.delete(cardId);
+      this.listCardsCache = null;
+      return card;
+    } catch (error) {
+      this.logError(`Failed to update card ${cardId} in Metabase API`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Create a new dashboard in Metabase
+   */
+  async createDashboard(payload: Record<string, unknown>): Promise<any> {
+    this.logDebug('Creating new dashboard in Metabase');
+    const startTime = Date.now();
+    try {
+      const dashboard = await this.request<any>('/api/dashboard', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      this.logInfo(
+        `Successfully created dashboard "${dashboard.name}" (id: ${dashboard.id}) in ${Date.now() - startTime}ms`
+      );
+      // Invalidate list cache
+      this.listDashboardsCache = null;
+      return dashboard;
+    } catch (error) {
+      this.logError('Failed to create dashboard in Metabase API', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update an existing dashboard in Metabase
+   */
+  async updateDashboard(dashboardId: number, payload: Record<string, unknown>): Promise<any> {
+    this.logDebug(`Updating dashboard ${dashboardId} in Metabase`);
+    const startTime = Date.now();
+    try {
+      const dashboard = await this.request<any>(`/api/dashboard/${dashboardId}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+      this.logInfo(`Successfully updated dashboard ${dashboardId} in ${Date.now() - startTime}ms`);
+      // Invalidate caches
+      this.dashboardCache.delete(dashboardId);
+      this.listDashboardsCache = null;
+      return dashboard;
+    } catch (error) {
+      this.logError(`Failed to update dashboard ${dashboardId} in Metabase API`, error);
+      throw error;
+    }
+  }
 }
