@@ -37,7 +37,8 @@ export async function handleRetrieve(
   logWarn: (message: string, data?: unknown, error?: Error) => void,
   logError: (message: string, data?: unknown) => void
 ) {
-  const { model, ids, table_offset, table_limit } = request.params?.arguments || {};
+  const { model, ids, table_offset, table_limit, optimization_level } =
+    request.params?.arguments || {};
 
   // Validate required parameters
   if (!model) {
@@ -160,13 +161,19 @@ export async function handleRetrieve(
           ? CONCURRENCY_LIMITS.MEDIUM_BATCH_SIZE
           : CONCURRENCY_LIMITS.LARGE_BATCH_SIZE;
 
-    // Determine optimization level based on request size to manage token usage
+    // Determine optimization level: use explicit user override if provided, otherwise auto-select based on request size
     const optimizationLevel =
-      numericIds.length >= OPTIMIZATION_THRESHOLDS.ULTRA_MINIMAL_THRESHOLD
+      optimization_level === 'minimal'
         ? OptimizationLevel.ULTRA_MINIMAL
-        : numericIds.length >= OPTIMIZATION_THRESHOLDS.AGGRESSIVE_OPTIMIZATION_THRESHOLD
+        : optimization_level === 'aggressive'
           ? OptimizationLevel.AGGRESSIVE
-          : OptimizationLevel.STANDARD;
+          : optimization_level === 'standard'
+            ? OptimizationLevel.STANDARD
+            : numericIds.length >= OPTIMIZATION_THRESHOLDS.ULTRA_MINIMAL_THRESHOLD
+              ? OptimizationLevel.ULTRA_MINIMAL
+              : numericIds.length >= OPTIMIZATION_THRESHOLDS.AGGRESSIVE_OPTIMIZATION_THRESHOLD
+                ? OptimizationLevel.AGGRESSIVE
+                : OptimizationLevel.STANDARD;
 
     logDebug(
       `Processing ${numericIds.length} ${validatedModel}(s) with concurrency limit: ${CONCURRENT_LIMIT}, optimization level: ${optimizationLevel}`

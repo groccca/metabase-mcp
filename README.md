@@ -151,8 +151,11 @@ Then configure your MCP client to use the local build:
   "mcpServers": {
     "metabase-mcp": {
       "command": "node",
-      "args": ["/path/to/metabase-mcp/build/src/index.js"],
-      "env": { /* see Manual Configuration for options */ }
+      "args": ["/Users/grocca/Desktop/repos/metabase-mcp/build/src/index.js"],
+      "env": {
+        "METABASE_URL": "********",
+        "METABASE_API_KEY": "********",
+        "METABASE_READ_ONLY_MODE": "********"}
     }
   }
 }
