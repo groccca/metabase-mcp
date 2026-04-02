@@ -4,29 +4,6 @@
 
 import 'dotenv/config';
 import { z } from 'zod';
-import { homedir } from 'os';
-import { join } from 'path';
-
-// Helper function to expand system variables
-function expandSystemVariables(path: string | undefined): string {
-  // If no path is provided, use default
-  if (!path) {
-    return join(homedir(), 'Downloads', 'Metabase');
-  }
-
-  const homeDir = homedir();
-  const desktopDir = join(homeDir, 'Desktop');
-  const documentsDir = join(homeDir, 'Documents');
-  const downloadsDir = join(homeDir, 'Downloads');
-
-  return path
-    .replace(/\$\{HOME\}/g, homeDir)
-    .replace(/\$\{DESKTOP\}/g, desktopDir)
-    .replace(/\$\{DOCUMENTS\}/g, documentsDir)
-    .replace(/\$\{DOWNLOADS\}/g, downloadsDir)
-    .replace(/\$HOME/g, homeDir)
-    .replace(/^~/, homeDir);
-}
 
 // Environment variable schema
 const envSchema = z
@@ -47,10 +24,20 @@ const envSchema = z
       .default('600000')
       .transform(val => parseInt(val, 10))
       .pipe(z.number().positive()), // 10 minutes
-    EXPORT_DIRECTORY: z.string().default('${DOWNLOADS}/Metabase').transform(expandSystemVariables),
+    // SQL_READ_ONLY_MODE controls whether non-SELECT SQL queries are blocked.
+    // Accepts SQL_READ_ONLY_MODE (preferred) or legacy METABASE_READ_ONLY_MODE.
+    SQL_READ_ONLY_MODE: z
+      .string()
+      .optional()
+      .transform(val => (val !== undefined ? val.toLowerCase() === 'true' : undefined)),
     METABASE_READ_ONLY_MODE: z
       .string()
-      .default('true')
+      .optional()
+      .transform(val => (val !== undefined ? val.toLowerCase() === 'true' : undefined)),
+    // METABASE_WRITE_ENABLED controls whether the create/update tool can make API writes.
+    METABASE_WRITE_ENABLED: z
+      .string()
+      .default('false')
       .transform(val => val.toLowerCase() === 'true'),
   })
   .refine(data => data.METABASE_API_KEY || (data.METABASE_USER_EMAIL && data.METABASE_PASSWORD), {
@@ -62,7 +49,15 @@ const envSchema = z
 // Parse and validate environment variables
 function validateEnvironment() {
   try {
-    return envSchema.parse(process.env);
+    const parsed = envSchema.parse(process.env);
+    // SQL_READ_ONLY_MODE takes precedence; fall back to METABASE_READ_ONLY_MODE; default true
+    const sqlReadOnly =
+      parsed.SQL_READ_ONLY_MODE !== undefined
+        ? parsed.SQL_READ_ONLY_MODE
+        : parsed.METABASE_READ_ONLY_MODE !== undefined
+          ? parsed.METABASE_READ_ONLY_MODE
+          : true;
+    return { ...parsed, SQL_READ_ONLY_MODE: sqlReadOnly };
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errorMessages = error.errors.map(err => `${err.path.join('.')}: ${err.message}`);
@@ -83,8 +78,9 @@ function createTestConfig() {
     LOG_LEVEL: 'info' as const,
     CACHE_TTL_MS: 600000,
     REQUEST_TIMEOUT_MS: 600000,
-    EXPORT_DIRECTORY: join(homedir(), 'Downloads', 'Metabase'),
-    METABASE_READ_ONLY_MODE: true,
+    SQL_READ_ONLY_MODE: true,
+    METABASE_READ_ONLY_MODE: undefined as boolean | undefined,
+    METABASE_WRITE_ENABLED: false,
   };
 }
 

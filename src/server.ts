@@ -18,10 +18,10 @@ import { MetabaseApiClient } from './api.js';
 import {
   handleList,
   handleExecute,
-  handleExport,
   handleSearch,
   handleClearCache,
   handleRetrieve,
+  handleCreate,
 } from './handlers/index.js';
 import {
   handleListResources,
@@ -298,6 +298,44 @@ export class MetabaseServer {
           },
 
           {
+            name: 'create',
+            description:
+              'Create or update Metabase resources (cards/questions and dashboards). Requires METABASE_WRITE_ENABLED=true. Use action="create" to create a new resource or action="update" to modify an existing one. For cards, provide a dataset_query with the native SQL or MBQL query definition.',
+            annotations: {
+              readOnlyHint: false,
+              destructiveHint: false,
+              idempotentHint: false,
+              openWorldHint: false,
+            },
+            inputSchema: {
+              type: 'object',
+              properties: {
+                model: {
+                  type: 'string',
+                  enum: ['card', 'dashboard'],
+                  description: 'Type of resource to create or update.',
+                },
+                action: {
+                  type: 'string',
+                  enum: ['create', 'update'],
+                  description:
+                    '"create" to make a new resource, "update" to modify an existing one.',
+                },
+                id: {
+                  type: 'number',
+                  description: 'ID of the resource to update (required for action="update").',
+                },
+                payload: {
+                  type: 'object',
+                  description:
+                    'Fields to set on the resource. For create, "name" is required. For cards you can also pass "dataset_query", "display", "visualization_settings", "collection_id", and "description". For dashboards you can pass "description" and "collection_id".',
+                },
+              },
+              required: ['model', 'action', 'payload'],
+            },
+          },
+
+          {
             name: 'list',
             description:
               'Fetch all records for a single Metabase resource type with highly optimized responses for overview purposes. Retrieves complete lists of cards, dashboards, tables, databases, or collections. Returns only essential identifier fields for efficient browsing and includes intelligent caching for performance. Supports pagination for large datasets exceeding token limits.',
@@ -377,59 +415,6 @@ export class MetabaseServer {
                   default: 100,
                   minimum: 1,
                   maximum: 500,
-                },
-              },
-              required: [],
-            },
-          },
-          {
-            name: 'export',
-            description:
-              'Unified command to export large SQL query results or saved cards using Metabase export endpoints (supports up to 1M rows). Returns data in specified format (CSV, JSON, or XLSX) and automatically saves to Downloads/Metabase folder.',
-            annotations: {
-              readOnlyHint: true,
-              destructiveHint: false,
-              idempotentHint: false,
-              openWorldHint: true,
-            },
-            inputSchema: {
-              type: 'object',
-              properties: {
-                database_id: {
-                  type: 'number',
-                  description: 'Database ID to export query from (SQL mode only)',
-                },
-                query: {
-                  type: 'string',
-                  description: 'SQL query to execute and export (SQL mode only)',
-                },
-                card_id: {
-                  type: 'number',
-                  description: 'ID of saved card to export (card mode only)',
-                },
-                native_parameters: {
-                  type: 'array',
-                  items: { type: 'object' },
-                  description:
-                    'Parameters for SQL template variables like {{variable_name}} (SQL mode only)',
-                },
-                card_parameters: {
-                  type: 'array',
-                  items: { type: 'object' },
-                  description:
-                    'Parameters for filtering card results before export (card mode only). Each parameter must follow Metabase format: {id: "uuid", slug: "param_name", target: ["dimension", ["template-tag", "param_name"]], type: "param_type", value: ["param_value"]}. For dimension targets, value should be an array; scalar values are accepted and auto-wrapped.',
-                },
-                format: {
-                  type: 'string',
-                  enum: ['csv', 'json', 'xlsx'],
-                  description:
-                    'Export format: csv (text), json (structured data), or xlsx (Excel file)',
-                  default: 'csv',
-                },
-                filename: {
-                  type: 'string',
-                  description:
-                    'Custom filename (without extension) for the saved file. If not provided, a timestamp-based name will be used.',
                 },
               },
               required: [],
@@ -546,19 +531,6 @@ export class MetabaseServer {
             )
           );
 
-        case 'export':
-          return safeCall(() =>
-            handleExport(
-              request,
-              requestId,
-              this.apiClient,
-              this.logDebug.bind(this),
-              this.logInfo.bind(this),
-              this.logWarn.bind(this),
-              this.logError.bind(this)
-            )
-          );
-
         case 'clear_cache':
           return safeCall(() =>
             handleClearCache(
@@ -579,6 +551,18 @@ export class MetabaseServer {
               this.logDebug.bind(this),
               this.logInfo.bind(this),
               this.logWarn.bind(this),
+              this.logError.bind(this)
+            )
+          );
+
+        case 'create':
+          return safeCall(() =>
+            handleCreate(
+              request,
+              requestId,
+              this.apiClient,
+              this.logDebug.bind(this),
+              this.logInfo.bind(this),
               this.logError.bind(this)
             )
           );
