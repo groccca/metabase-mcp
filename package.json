@@ -1,6 +1,6 @@
 {
   "name": "groccamb-mcp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A high-performance MCP server for Metabase analytics integration with response optimization and robust error handling",
   "type": "module",
   "author": {
