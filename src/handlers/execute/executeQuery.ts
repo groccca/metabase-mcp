@@ -36,14 +36,40 @@ export function isReadOnlyQuery(sql: string): boolean {
     /^\s*TRUNCATE\b/,
     /^\s*REPLACE\b/,
     /^\s*MERGE\b/,
-    /^\s*CALL\b/, // Stored procedures
-    /^\s*EXEC(UTE)?\b/, // Execute statements
+    /^\s*CALL\b/,
+    /^\s*EXEC(UTE)?\b/,
     /^\s*GRANT\b/,
     /^\s*REVOKE\b/,
-    /^\s*SET\b/, // Can modify session variables
+    /^\s*SET\b/,
   ];
 
-  return !writePatterns.some(pattern => pattern.test(normalized));
+  const writeAnywherePatterns = [
+    /\bINSERT\b/,
+    /\bUPDATE\b/,
+    /\bDELETE\b/,
+    /\bDROP\b/,
+    /\bCREATE\b/,
+    /\bALTER\b/,
+    /\bTRUNCATE\b/,
+    /\bREPLACE\b/,
+    /\bMERGE\b/,
+    /\bCALL\b/,
+    /\bEXEC(UTE)?\b/,
+    /\bGRANT\b/,
+    /\bREVOKE\b/,
+    /\bSET\b/,
+  ];
+
+  const statements = normalized
+    .split(';')
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+
+  return !statements.some(
+    statement =>
+      writePatterns.some(p => p.test(statement)) ||
+      writeAnywherePatterns.some(p => p.test(statement))
+  );
 }
 
 export async function executeSqlQuery(

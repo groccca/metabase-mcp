@@ -12,7 +12,7 @@ import {
   resetAllMocks,
   createMockRequest,
   getLoggerFunctions,
-  sampleQueryResult
+  sampleQueryResult,
 } from '../setup.js';
 
 describe('handleExecute (execute command)', () => {
@@ -26,7 +26,15 @@ describe('handleExecute (execute command)', () => {
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -40,7 +48,15 @@ describe('handleExecute (execute command)', () => {
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -50,15 +66,23 @@ describe('handleExecute (execute command)', () => {
     });
 
     it('should throw error when card execution mode has SQL parameters', async () => {
-      const request = createMockRequest('execute', { 
-        card_id: 1, 
+      const request = createMockRequest('execute', {
+        card_id: 1,
         query: 'SELECT * FROM users',
-        native_parameters: [{ name: 'param1', value: 'test' }]
+        native_parameters: [{ name: 'param1', value: 'test' }],
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -67,22 +91,30 @@ describe('handleExecute (execute command)', () => {
           requestId: 'test-request-id',
           invalidParams: expect.objectContaining({
             query: 'provided',
-            native_parameters: 'provided'
-          })
+            native_parameters: 'provided',
+          }),
         })
       );
     });
 
     it('should throw error when SQL execution mode has card parameters', async () => {
-      const request = createMockRequest('execute', { 
-        database_id: 1, 
+      const request = createMockRequest('execute', {
+        database_id: 1,
         query: 'SELECT * FROM users',
-        card_parameters: [{ name: 'param1', value: 'test' }]
+        card_parameters: [{ name: 'param1', value: 'test' }],
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -90,21 +122,29 @@ describe('handleExecute (execute command)', () => {
         expect.objectContaining({
           requestId: 'test-request-id',
           invalidParams: expect.objectContaining({
-            card_parameters: 'provided'
-          })
+            card_parameters: 'provided',
+          }),
         })
       );
     });
 
     it('should throw error when card execution mode has database_id', async () => {
-      const request = createMockRequest('execute', { 
-        card_id: 1, 
-        database_id: 2
+      const request = createMockRequest('execute', {
+        card_id: 1,
+        database_id: 2,
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -118,7 +158,15 @@ describe('handleExecute (execute command)', () => {
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -132,7 +180,15 @@ describe('handleExecute (execute command)', () => {
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -146,7 +202,15 @@ describe('handleExecute (execute command)', () => {
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -159,12 +223,20 @@ describe('handleExecute (execute command)', () => {
       const request = createMockRequest('execute', {
         database_id: 1,
         query: 'SELECT 1',
-        row_limit: 0
+        row_limit: 0,
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -177,12 +249,20 @@ describe('handleExecute (execute command)', () => {
       const request = createMockRequest('execute', {
         database_id: 1,
         query: 'SELECT 1',
-        row_limit: 600
+        row_limit: 600,
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -197,17 +277,25 @@ describe('handleExecute (execute command)', () => {
       const request = createMockRequest('execute', {
         card_id: 1,
         card_parameters: [
-          { id: 'test-id', slug: 'test-param' } // missing target, type, value
-        ]
+          { id: 'test-id', slug: 'test-param' }, // missing target, type, value
+        ],
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
-        expect.stringContaining('Missing required field \'target\''),
+        expect.stringContaining("Missing required field 'target'"),
         expect.objectContaining({ requestId: 'test-request-id' })
       );
     });
@@ -221,18 +309,26 @@ describe('handleExecute (execute command)', () => {
             slug: 'test-param',
             target: ['dimension'], // missing second element
             type: 'text',
-            value: 'test-value'
-          }
-        ]
+            value: 'test-value',
+          },
+        ],
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid \'target\' field'),
+        expect.stringContaining("Invalid 'target' field"),
         expect.objectContaining({ requestId: 'test-request-id' })
       );
     });
@@ -246,18 +342,26 @@ describe('handleExecute (execute command)', () => {
             slug: 'test-param',
             target: ['dimension', ['template-tag', 'test-param']],
             type: 'text',
-            value: null // invalid value type
-          }
-        ]
+            value: null, // invalid value type
+          },
+        ],
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
-        expect.stringContaining('Invalid \'value\' field'),
+        expect.stringContaining("Invalid 'value' field"),
         expect.objectContaining({ requestId: 'test-request-id' })
       );
     });
@@ -271,17 +375,17 @@ describe('handleExecute (execute command)', () => {
             slug: 'user_id',
             target: ['dimension', ['template-tag', 'user_id']],
             type: 'id',
-            value: '12345'
+            value: '12345',
           },
           {
             id: '1646c8b5-b9fb-32db-c198-7685b3f793d8',
             slug: 'date_range',
             target: ['dimension', ['template-tag', 'date_range']],
             type: 'date/all-options',
-            value: '2025-01-01~2025-12-31'
-          }
+            value: '2025-01-01~2025-12-31',
+          },
         ],
-        row_limit: 100
+        row_limit: 100,
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
@@ -289,21 +393,30 @@ describe('handleExecute (execute command)', () => {
       mockApiClient.getCard.mockResolvedValueOnce({
         data: { id: 1, name: 'Test Card' },
         source: 'api',
-        fetchTime: 100
+        fetchTime: 100,
       });
 
       const mockResponse = {
-        "0": { first_name: 'John', last_name: 'Doe' },
-        "1": { first_name: 'Jane', last_name: 'Smith' },
+        '0': { first_name: 'John', last_name: 'Doe' },
+        '1': { first_name: 'Jane', last_name: 'Smith' },
         data: {
-          rows: [['John', 'Doe'], ['Jane', 'Smith']],
-          cols: [{ name: 'first_name' }, { name: 'last_name' }]
-        }
+          rows: [
+            ['John', 'Doe'],
+            ['Jane', 'Smith'],
+          ],
+          cols: [{ name: 'first_name' }, { name: 'last_name' }],
+        },
       };
       mockApiClient.request.mockResolvedValueOnce(mockResponse);
 
       const result = await handleExecute(
-        request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
       );
 
       expect(result.content).toHaveLength(1);
@@ -321,8 +434,8 @@ describe('handleExecute (execute command)', () => {
             slug: 'user_id',
             target: ['dimension', ['template-tag', 'user_id']],
             type: 'id',
-            value: ['12345', '67890']
-          }
+            value: ['12345', '67890'],
+          },
         ],
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
@@ -359,14 +472,22 @@ describe('handleExecute (execute command)', () => {
             slug: 'test-param',
             target: ['dimension', ['template-tag', 'test-param']],
             type: 'text',
-            value: []
-          }
-        ]
+            value: [],
+          },
+        ],
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -384,14 +505,22 @@ describe('handleExecute (execute command)', () => {
             slug: 'test-param',
             target: ['variable', ['template-tag', 'test-param']],
             type: 'text',
-            value: ['test-value']
-          }
-        ]
+            value: ['test-value'],
+          },
+        ],
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -409,18 +538,28 @@ describe('handleExecute (execute command)', () => {
             slug: 'test-param',
             target: ['dimension', ['template-tag', 'test-param']],
             type: 'text',
-            value: ['ok', '']
-          }
-        ]
+            value: ['ok', ''],
+          },
+        ],
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
-        expect.stringContaining('dimension arrays must contain only non-empty string, number, or boolean values'),
+        expect.stringContaining(
+          'dimension arrays must contain only non-empty string, number, or boolean values'
+        ),
         expect.objectContaining({ requestId: 'test-request-id' })
       );
     });
@@ -434,14 +573,22 @@ describe('handleExecute (execute command)', () => {
             slug: 'test-param',
             target: ['dimension', ['template-tag', 'test-param']],
             type: 'text',
-            value: '' // empty string
-          }
-        ]
+            value: '', // empty string
+          },
+        ],
       });
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       expect(mockLogger.logWarn).toHaveBeenCalledWith(
@@ -458,10 +605,18 @@ describe('handleExecute (execute command)', () => {
 
       const request = createMockRequest('execute', {
         database_id: 1,
-        query: 'SELECT * FROM users'
+        query: 'SELECT * FROM users',
       });
 
-      const result = await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      const result = await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/dataset', {
         method: 'POST',
@@ -488,10 +643,18 @@ describe('handleExecute (execute command)', () => {
       const request = createMockRequest('execute', {
         database_id: 1,
         query: 'SELECT * FROM users',
-        row_limit: 100
+        row_limit: 100,
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/dataset', {
         method: 'POST',
@@ -514,10 +677,18 @@ describe('handleExecute (execute command)', () => {
       const request = createMockRequest('execute', {
         database_id: 1,
         query: 'SELECT * FROM users LIMIT 10',
-        row_limit: 100
+        row_limit: 100,
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/dataset', {
         method: 'POST',
@@ -540,10 +711,18 @@ describe('handleExecute (execute command)', () => {
       const request = createMockRequest('execute', {
         database_id: 1,
         query: 'SELECT * FROM users LIMIT 1000',
-        row_limit: 100
+        row_limit: 100,
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/dataset', {
         method: 'POST',
@@ -564,16 +743,24 @@ describe('handleExecute (execute command)', () => {
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       const nativeParameters = [
-        { type: 'text', target: ['variable', ['template-tag', 'user_id']], value: '123' }
+        { type: 'text', target: ['variable', ['template-tag', 'user_id']], value: '123' },
       ];
 
       const request = createMockRequest('execute', {
         database_id: 1,
         query: 'SELECT * FROM users WHERE id = {{user_id}}',
-        native_parameters: nativeParameters
+        native_parameters: nativeParameters,
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/dataset', {
         method: 'POST',
@@ -596,11 +783,19 @@ describe('handleExecute (execute command)', () => {
 
       const request = createMockRequest('execute', {
         database_id: 1,
-        query: 'SELECT * FROM users'
+        query: 'SELECT * FROM users',
       });
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow();
     });
   });
@@ -625,10 +820,18 @@ describe('handleExecute (execute command)', () => {
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       const request = createMockRequest('execute', {
-        card_id: 123
+        card_id: 123,
       });
 
-      const result = await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      const result = await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/card/123/query/json', {
         method: 'POST',
@@ -655,16 +858,24 @@ describe('handleExecute (execute command)', () => {
           target: ['dimension', ['template-tag', 'cp_id']],
           value: '9458014662',
           id: 'b86c100e-87cb-09d6-7c33-e58cd2cdbcb2',
-          slug: 'cp_id'
-        }
+          slug: 'cp_id',
+        },
       ];
 
       const request = createMockRequest('execute', {
         card_id: 123,
-        card_parameters: cardParameters
+        card_parameters: cardParameters,
       });
 
-      const result = await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      const result = await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/card/123/query/json', {
         method: 'POST',
@@ -673,7 +884,7 @@ describe('handleExecute (execute command)', () => {
             {
               ...cardParameters[0],
               value: ['9458014662'],
-            }
+            },
           ],
           pivot_results: false,
           format_rows: false,
@@ -690,7 +901,11 @@ describe('handleExecute (execute command)', () => {
     it('should apply row limit to card results (standard format)', async () => {
       const largeCardResult = {
         data: {
-          rows: Array.from({ length: 1000 }, (_, i) => [i + 1, `User ${i + 1}`, `user${i + 1}@example.com`]),
+          rows: Array.from({ length: 1000 }, (_, i) => [
+            i + 1,
+            `User ${i + 1}`,
+            `user${i + 1}@example.com`,
+          ]),
           cols: [
             { name: 'id', display_name: 'ID', base_type: 'type/Integer' },
             { name: 'name', display_name: 'Name', base_type: 'type/Text' },
@@ -704,10 +919,18 @@ describe('handleExecute (execute command)', () => {
 
       const request = createMockRequest('execute', {
         card_id: 123,
-        row_limit: 100
+        row_limit: 100,
       });
 
-      const result = await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      const result = await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       const responseData = JSON.parse(result.content[0].text);
       expect(responseData.row_count).toBe(100);
@@ -719,15 +942,15 @@ describe('handleExecute (execute command)', () => {
     it('should apply row limit to card results (numbered keys format)', async () => {
       // Create a response with numbered keys (actual Metabase format)
       const numberedKeysResult: any = {
-        data: { rows: [] }
+        data: { rows: [] },
       };
-      
+
       // Add 50 numbered entries
       for (let i = 0; i < 50; i++) {
         numberedKeysResult[i.toString()] = {
           id: i + 1,
           name: `User ${i + 1}`,
-          email: `user${i + 1}@example.com`
+          email: `user${i + 1}@example.com`,
         };
       }
 
@@ -736,16 +959,24 @@ describe('handleExecute (execute command)', () => {
 
       const request = createMockRequest('execute', {
         card_id: 123,
-        row_limit: 10
+        row_limit: 10,
       });
 
-      const result = await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      const result = await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       const responseData = JSON.parse(result.content[0].text);
       expect(responseData.row_count).toBe(10);
       expect(responseData.original_row_count).toBe(50);
       expect(responseData.applied_limit).toBe(10);
-      
+
       // Check that only keys 0-9 exist in the response data
       const dataKeys = Object.keys(responseData.data).filter(key => /^\d+$/.test(key));
       expect(dataKeys).toHaveLength(10);
@@ -758,11 +989,19 @@ describe('handleExecute (execute command)', () => {
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       const request = createMockRequest('execute', {
-        card_id: 999
+        card_id: 999,
       });
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow();
     });
 
@@ -778,7 +1017,7 @@ describe('handleExecute (execute command)', () => {
                 name: 'user_id',
                 'display-name': 'User ID',
                 type: 'id',
-                dimension: ['template-tag', 'user_id']
+                dimension: ['template-tag', 'user_id'],
               },
               type: 'invalid-parameter',
               params: [
@@ -787,14 +1026,14 @@ describe('handleExecute (execute command)', () => {
                   id: 'param-id',
                   type: 'id',
                   target: ['dimension', ['template-tag', 'user_id']],
-                  slug: 'user_id'
-                }
-              ]
-            }
-          }
-        }
+                  slug: 'user_id',
+                },
+              ],
+            },
+          },
+        },
       };
-      
+
       mockApiClient.request.mockRejectedValue(parameterError);
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
@@ -806,13 +1045,21 @@ describe('handleExecute (execute command)', () => {
             slug: 'user_id',
             target: ['dimension', ['template-tag', 'user_id']],
             type: 'id',
-            value: 'john_doe' // String value for ID parameter type
-          }
-        ]
+            value: 'john_doe', // String value for ID parameter type
+          },
+        ],
       });
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow(McpError);
 
       // Verify that parameter validation error was logged
@@ -840,7 +1087,7 @@ describe('handleExecute (execute command)', () => {
                 'display-name': 'CP ID(s)',
                 type: 'dimension',
                 dimension: ['field', 2347, null],
-                'widget-type': 'id'
+                'widget-type': 'id',
               },
               type: 'invalid-parameter',
               params: [
@@ -849,15 +1096,15 @@ describe('handleExecute (execute command)', () => {
                   id: 'b86c100e-87cb-09d6-7c33-e58cd2cdbcb2',
                   type: 'id',
                   target: ['dimension', ['template-tag', 'cp_id']],
-                  slug: 'cp_id'
-                }
-              ]
-            }
-          }
+                  slug: 'cp_id',
+                },
+              ],
+            },
+          },
         ],
-        data: { rows: [], cols: [] }
+        data: { rows: [], cols: [] },
       };
-      
+
       mockApiClient.request.mockResolvedValue(successfulResponseWithError);
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
@@ -869,13 +1116,21 @@ describe('handleExecute (execute command)', () => {
             slug: 'cp_id',
             target: ['dimension', ['template-tag', 'cp_id']],
             type: 'id',
-            value: '314 Studios' // String value for ID parameter type (should be numeric)
-          }
-        ]
+            value: '314 Studios', // String value for ID parameter type (should be numeric)
+          },
+        ],
       });
 
       await expect(
-        handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError)
+        handleExecute(
+          request,
+          'test-request-id',
+          mockApiClient as any,
+          logDebug,
+          logInfo,
+          logWarn,
+          logError
+        )
       ).rejects.toThrow();
 
       // Verify that parameter validation error was logged
@@ -890,10 +1145,18 @@ describe('handleExecute (execute command)', () => {
       const [logDebug, logInfo, logWarn, logError] = getLoggerFunctions();
 
       const request = createMockRequest('execute', {
-        card_id: 123
+        card_id: 123,
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockLogger.logDebug).toHaveBeenCalledWith(
         'Executing card ID: 123 with row limit: 100'
@@ -911,10 +1174,18 @@ describe('handleExecute (execute command)', () => {
 
       const request = createMockRequest('execute', {
         database_id: 1,
-        query: '  SELECT * FROM users  \n\n  '
+        query: '  SELECT * FROM users  \n\n  ',
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/dataset', {
         method: 'POST',
@@ -936,10 +1207,18 @@ describe('handleExecute (execute command)', () => {
 
       const request = createMockRequest('execute', {
         database_id: 1,
-        query: 'SELECT * FROM users;'
+        query: 'SELECT * FROM users;',
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/dataset', {
         method: 'POST',
@@ -963,10 +1242,18 @@ describe('handleExecute (execute command)', () => {
 
       const request = createMockRequest('execute', {
         database_id: 1,
-        query: 'SELECT * FROM users'
+        query: 'SELECT * FROM users',
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockLogger.logDebug).toHaveBeenCalledWith(
         'Executing SQL query against database ID: 1 with row limit: 100'
@@ -979,10 +1266,18 @@ describe('handleExecute (execute command)', () => {
 
       const request = createMockRequest('execute', {
         database_id: 1,
-        query: 'SELECT * FROM users'
+        query: 'SELECT * FROM users',
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockLogger.logInfo).toHaveBeenCalledWith(
         expect.stringContaining('Successfully executed SQL query against database: 1')
@@ -997,10 +1292,18 @@ describe('handleExecute (execute command)', () => {
 
       const request = createMockRequest('execute', {
         database_id: 1,
-        query: 'SELECT * FROM users'
+        query: 'SELECT * FROM users',
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/dataset', {
         method: 'POST',
@@ -1022,10 +1325,18 @@ describe('handleExecute (execute command)', () => {
 
       const request = createMockRequest('execute', {
         database_id: 1,
-        query: 'SELECT * FROM users'
+        query: 'SELECT * FROM users',
       });
 
-      await handleExecute(request, 'test-request-id', mockApiClient as any, logDebug, logInfo, logWarn, logError);
+      await handleExecute(
+        request,
+        'test-request-id',
+        mockApiClient as any,
+        logDebug,
+        logInfo,
+        logWarn,
+        logError
+      );
 
       expect(mockApiClient.request).toHaveBeenCalledWith('/api/dataset', {
         method: 'POST',
@@ -1054,15 +1365,23 @@ describe('isReadOnlyQuery', () => {
     });
 
     it('should allow SELECT queries with JOINs', () => {
-      expect(isReadOnlyQuery('SELECT u.name, o.total FROM users u JOIN orders o ON u.id = o.user_id')).toBe(true);
+      expect(
+        isReadOnlyQuery('SELECT u.name, o.total FROM users u JOIN orders o ON u.id = o.user_id')
+      ).toBe(true);
     });
 
     it('should allow SELECT queries with subqueries', () => {
-      expect(isReadOnlyQuery('SELECT * FROM users WHERE id IN (SELECT user_id FROM orders)')).toBe(true);
+      expect(isReadOnlyQuery('SELECT * FROM users WHERE id IN (SELECT user_id FROM orders)')).toBe(
+        true
+      );
     });
 
     it('should allow CTEs (WITH clause)', () => {
-      expect(isReadOnlyQuery('WITH active_users AS (SELECT * FROM users WHERE active = true) SELECT * FROM active_users')).toBe(true);
+      expect(
+        isReadOnlyQuery(
+          'WITH active_users AS (SELECT * FROM users WHERE active = true) SELECT * FROM active_users'
+        )
+      ).toBe(true);
     });
 
     it('should allow SHOW statements', () => {
@@ -1133,7 +1452,9 @@ describe('isReadOnlyQuery', () => {
     });
 
     it('should block MERGE queries', () => {
-      expect(isReadOnlyQuery('MERGE INTO users USING temp_users ON users.id = temp_users.id')).toBe(false);
+      expect(isReadOnlyQuery('MERGE INTO users USING temp_users ON users.id = temp_users.id')).toBe(
+        false
+      );
     });
 
     it('should block CALL statements', () => {
@@ -1169,6 +1490,71 @@ describe('isReadOnlyQuery', () => {
       expect(isReadOnlyQuery('delete from users')).toBe(false);
       expect(isReadOnlyQuery('DELETE FROM users')).toBe(false);
       expect(isReadOnlyQuery('Delete From Users')).toBe(false);
+    });
+  });
+  describe('should return false for multi-statement and CTE-prefixed write queries', () => {
+    it('should block multi-statement injection with SELECT first', () => {
+      expect(isReadOnlyQuery('SELECT 1; DROP TABLE users')).toBe(false);
+    });
+
+    it('should block multi-statement injection with SELECT and DELETE', () => {
+      expect(isReadOnlyQuery('SELECT * FROM users; DELETE FROM users WHERE id = 1')).toBe(false);
+    });
+
+    it('should block multi-statement injection with SELECT and INSERT', () => {
+      expect(
+        isReadOnlyQuery('SELECT * FROM users; INSERT INTO users (name) VALUES ("hacked")')
+      ).toBe(false);
+    });
+
+    it('should block multi-statement injection with SELECT and TRUNCATE', () => {
+      expect(isReadOnlyQuery('SELECT * FROM users; TRUNCATE TABLE users')).toBe(false);
+    });
+
+    it('should block multi-statement injection with multiple semicolons', () => {
+      expect(isReadOnlyQuery('SELECT 1; SELECT 2; DROP DATABASE mydb')).toBe(false);
+    });
+
+    it('should still allow legitimate single SELECT with semicolon', () => {
+      expect(isReadOnlyQuery('SELECT * FROM users;')).toBe(true);
+    });
+
+    it('should block CTE-prefixed DELETE', () => {
+      expect(isReadOnlyQuery('WITH x AS (SELECT * FROM users) DELETE FROM users')).toBe(false);
+    });
+
+    it('should block CTE-prefixed INSERT', () => {
+      expect(
+        isReadOnlyQuery('WITH x AS (SELECT * FROM users) INSERT INTO archive SELECT * FROM x')
+      ).toBe(false);
+    });
+
+    it('should block CTE-prefixed UPDATE', () => {
+      expect(
+        isReadOnlyQuery(
+          'WITH x AS (SELECT id FROM users) UPDATE users SET active = false WHERE id IN (SELECT id FROM x)'
+        )
+      ).toBe(false);
+    });
+
+    it('should block CTE-prefixed DROP', () => {
+      expect(isReadOnlyQuery('WITH x AS (SELECT 1) DROP TABLE users')).toBe(false);
+    });
+
+    it('should still allow legitimate CTEs', () => {
+      expect(
+        isReadOnlyQuery(
+          'WITH active_users AS (SELECT * FROM users WHERE active = true) SELECT * FROM active_users'
+        )
+      ).toBe(true);
+    });
+
+    it('should block write queries hidden after comment stripping', () => {
+      expect(isReadOnlyQuery('/* SELECT */ DROP TABLE users')).toBe(false);
+    });
+
+    it('should block write queries hidden in multi-line comment stripping', () => {
+      expect(isReadOnlyQuery('/* \n SELECT * FROM users \n */ DELETE FROM users')).toBe(false);
     });
   });
 });
